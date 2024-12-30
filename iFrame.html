@@ -1,0 +1,44 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        <nav>
+            <ul>
+                <li>about us</li>
+                <li>services</li>
+                <li>contact us</li>
+                <li>map</li>
+                <input type="text" name="" id="userIdInput" placeholder="user ID ...">
+                <input type="text" name="" id="usernameInput" placeholder="username ...">
+                <button onclick="updateIframeUrl()">Sign In</button>
+            </ul>
+        </nav>
+        <h1>WELCOME</h1>
+        <iframe id="myIframe" src="http://localhost:3000/" width="800" height="600"></iframe>
+        <script>
+            function updateIframeUrl() {
+                const userIdInput = document.getElementById('userIdInput').value
+                const usernameInput = document.getElementById('usernameInput').value
+                const iframe = document.getElementById('myIframe')
+                const newUrl = new URL(iframe.src)
+                newUrl.searchParams.set('userid', userIdInput)
+                newUrl.searchParams.set('username', usernameInput)
+                iframe.src = newUrl.toString()
+            }
+            
+            
+            </script>
+    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ex natus obcaecati deserunt fugiat. Corporis culpa
+        adipisci unde optio nam incidunt, dolor necessitatibus dolore amet exercitationem cupiditate debitis? Modi iure
+        veritatis blanditiis, maxime, error nam magni corporis incidunt, dolorum reiciendis quibusdam accusamus?
+        Repellendus et non eum asperiores, officiis, beatae porro obcaecati vero aut culpa esse laborum totam
+        perferendis a modi.</p>
+    </center>
+    </body>
+    
+    </html>
