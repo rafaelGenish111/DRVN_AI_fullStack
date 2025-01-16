@@ -16,3 +16,16 @@ redisClient.connect()
     .then(() => console.log('connect to Redis!'))
     .catch(error => console.error('redis connection error: ', error))
 
+redisClient.on('connect', () => {
+    console.log('Redis client connected');
+});
+
+redisClient.on('error', (err) => {
+    console.error('Redis error:', err.message);
+});
+
+redisClient.on('end', () => {
+    console.log('Redis client disconnected');
+});
+
+module.exports = redisClient;

@@ -8,19 +8,28 @@ export default function Home() {
     const [userID, setUserID] = useState(null);
 
     useEffect(() => {
-        socket.on('line_update', (data) => {
-            console.log('New line data:', data);
-            setLineData(data);
-        });
+      
     
+        socket.on();
+        socket.on('connect', () => {
+            console.log('Connected to server:', socket.id);
+        });
+        socket.on('line_update', (data) => {
+            console.log('Received line update:', data); 
+            setLineData(data);
+            console.log('line data client:', lineData);
+        });
+
         const urlParams = new URLSearchParams(window.location.search);
-        setUsername(urlParams.get('username'));
-        setUserID(urlParams.get('userid'));
+        setUsername(urlParams.get('username') || 'Guest');
+        setUserID(urlParams.get('userid') || 'Unknown');
 
         return () => {
-            socket.disconnect();
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+            });
         }
-    }, [userID, username]);
+    }, [lineData]);
     
     const handleClosePopup = () => {
         setLineData(null);
@@ -39,7 +48,11 @@ export default function Home() {
                     :
                     (<h1>Hello guest</h1>)
             }
-         {lineData && <Popup lineData={lineData} onClose={handleClosePopup} />}
+          {lineData ? (
+              <Popup lineData={lineData} onClose={handleClosePopup} />
+          ) : (
+                  <p>No betting lines available at the moment</p>
+          )}
     </div>
   )
 }

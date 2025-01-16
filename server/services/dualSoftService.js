@@ -52,7 +52,7 @@ const cancelReservation = async (username, password, uuid) => {
 const ticketPayin = async (username, password, sessionId, application, ticketId, recivedData, reservationUuid, domain, externalTransactionId, ticketDetails, applicationProducer) => {
     const endpoint = '/ticketPayinJson';
     const data = {
-        cancelReservationRequest: {
+        ticketPayinRequest: {
             username, password, sessionId, application, ticketId, recivedData, reservationUuid, domain, externalTransactionId, ticketDetails, applicationProducer
         }
     };
@@ -61,9 +61,9 @@ const ticketPayin = async (username, password, sessionId, application, ticketId,
 
 // ticket payen without reservation
 const ticketPayinWithoutReservation = async (username, password, sessionId, application, ticketId, recivedData, userUuid, reservationUuid, externalTransactionId, amount, ccy, ticketDetails, accountType = 'INTERNET', applicationProducer) => {
-    const endpoint = '/ticketPayinWithoutReservationjson';
+    const endpoint = '/ticketPayinWithoutReservationJson';
     const data = {
-        cancelReservationRequest: {
+        ticketPayinWithoutReservationRequest: {
             username, password, sessionId, application, ticketId, recivedData, userUuid, reservationUuid, externalTransactionId, amount, ccy, ticketDetails, accountType, applicationProducer
         }
     };
@@ -74,7 +74,7 @@ const ticketPayinWithoutReservation = async (username, password, sessionId, appl
 const cancelTicketPayin = async (username, password, sessionId, application, ticketId, reservationUuid, externalTransactionId, applicationProducer) => {
     const endpoint = '/cancelTicketPayinJson';
     const data = {
-        cancelReservationRequest: {
+        cancelTicketPayinRequest: {
             username, password, sessionId, application, ticketId, reservationUuid, externalTransactionId, applicationProducer
         }
     };
@@ -85,7 +85,7 @@ const cancelTicketPayin = async (username, password, sessionId, application, tic
 const ticketWon = async (username, password, application, ticketId, reservationUuid, externalTransactionId, ticketDetails, applicationProducer) => {
     const endpoint = '/ticketWonJson';
     const data = {
-        cancelReservationRequest: {
+        ticketWonRequest: {
             username, password, application, ticketId, reservationUuid, externalTransactionId, ticketDetails, applicationProducer
         }
     };
@@ -96,7 +96,7 @@ const ticketWon = async (username, password, application, ticketId, reservationU
 const ticketLost = async (username, password, application, ticketId, ticketDetails) => {
     const endpoint = '/ticketLostJson';
     const data = {
-        cancelReservationRequest: {
+        ticketLostRequest: {
             username, password, application, ticketId, ticketDetails
         }
     };
@@ -107,7 +107,7 @@ const ticketLost = async (username, password, application, ticketId, ticketDetai
 const rollbackWithoutReservation = async (username, password, application, userUuid, accountType, externalTransactionId, rollbackType, ticketId, ticketDetails, applicationProducer) => {
     const endpoint = '/rollbackWithoutReservationJson';
     const data = {
-        cancelReservationRequest: {
+        rollbackWithoutReservationRequest: {
             username, password, application, userUuid, accountType, externalTransactionId, rollbackType, ticketId, ticketDetails, applicationProducer
         }
     };
@@ -119,7 +119,7 @@ const rollbackWithoutReservation = async (username, password, application, userU
 const getOpenTickets = async (username, password, application) => {
     const endpoint = '/getOpenTicketsJson';
     const data = {
-        cancelReservationRequest: {
+        getOpenTicketsRequest: {
             username, password, application
         }
     };
@@ -130,7 +130,7 @@ const getOpenTickets = async (username, password, application) => {
 const createLockedBonus = async (username, password, providerBonusCode, userUuid, accountType, amount, ccy, requiredTurnover,expiryDate, externalTransactionId, application) => {
     const endpoint = '/createLockedBonusJson';
     const data = {
-        cancelReservationRequest: {
+        createLockedBonusRequest: {
             username, password, providerBonusCode, userUuid, accountType, amount, ccy, requiredTurnover,expiryDate, externalTransactionId, application
         }
     };
@@ -164,14 +164,6 @@ async function getLockedBonuses(username, password, userUuid) {
     return makeRequest(endpoint, data);
 }
 
-// Get unlocked bonuses
-async function getUnlockedBonuses(username, password, userUuid) {
-    const endpoint = "/getUnlockedBonusesJson";
-    const data = {
-        GetUnlockedBonusesRequest: { username, password, userUuid }
-    };
-    return makeRequest(endpoint, data);
-}
 
 module.exports = {
     getUserInfo,
@@ -187,6 +179,5 @@ module.exports = {
     createLockedBonus,
     updateLockedBonusTurnover,
     unlockBonus,
-    getLockedBonuses,
-    getUnlockedBonuses
+    getLockedBonuses
 };

@@ -12,9 +12,11 @@ const app = express()
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: '*'
-    }
-});
+        origin: 'http://localhost:3000'
+    },
+    pingTimeout: 60000, // זמן מותר ללא תגובה (במילישניות)
+    pingInterval: 25000
+})
 socketManager(io);
 
 app.use(bodyParser.json());

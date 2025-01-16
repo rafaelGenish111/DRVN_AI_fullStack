@@ -1,19 +1,39 @@
 const hub88Service = require('./hub88Service');
 const dualSoftService = require('./dualSoftService');
+const demoApiService = require('./demoApiService');
 const redisClient = require('./redisService');
 
-const WALLET_PROVIDER = 'HUB88';
+const WALLET_PROVIDER = 'DEMOAPI`';
 
 // manage wallet
 const manageWallet = async (action, data) => {
-    if (WALLET_PROVIDER === 'HUB88') {
-        return await manageWalletWithHub88(action, data);
-    } else if (WALLET_PROVIDER === 'DUALSOFT') {
-        return await manageWalletWithDualsoft(action, data)
-    } else {
-        throw new Error('Unsupported wallet');
+    switch (WALLET_PROVIDER) {
+        case 'HUB88':
+            return await manageWalletWithHub88(action, data);
+        case 'DUALSOFT':
+            return await manageWalletWithDualsoft(action, data);
+        case 'DEMOAPI':
+            return await manageWalletWithDemoApi(action, data);
+        default:
+            throw new Error('Unsupported wallet');
     };
 };
+
+// manage via demo API
+const manageWalletWithDemoApi = async (action, data) => {
+    switch (action) {
+        case 'GET_BALANCE':
+            return await demoApiService.getUserBalance(username);
+        case 'PLACE_BET':
+            return await demoApiService.placeBet(username, lineId, amount, option);
+        case 'RECORD_WIN':
+            return await demoApiService.recordWin(betId);
+        case 'ROLLBACK':
+            return await demoApiService.rollback(betId);
+        default:
+            throw new Error('Unsupported action for Demo API');
+    }
+}
 
 // manage via Hub88
 const manageWalletWithHub88 = async (action, data) => {
@@ -100,15 +120,40 @@ const manageWalletWithDualsoft = async (action, data) => {
 
 // save line to redis
 const saveLineToRedis = async (line) => {
-    const lineKey = `line:${line.lineId}`;
-    await redisClient.hmSet(lineKey, {
-        status: line.action,
-        metadata: JSON.stringify(line.metadata),
-        odds: line.suggestedOdds,
-        configuration: JSON.stringify(line.configurations)
-    })
-    await redisClient.expire(lineKey, 60 * 60);
-    console.log(`Line ${line.lineId} saved in Redis`);
+    if (!redisClient.isOpen) {
+        console.error('Redis client is not connected');
+        throw new Error('Redis client is not connected');
+    }
+    const lineKey = `line:${line.id}`;
+    try {
+        console.log('Preparing to save line to Redis...');
+        console.log('Line Key:', lineKey);
+        console.log('Line Data:', JSON.stringify(line, null, 2));
+        const lineId = line.lineId || '';
+
+        const status = line.action || '';
+        const metadata = JSON.stringify({
+            lineType: line.line_type || '',
+            lineTypeName: line.line_type_name || '',
+            competition: line.competition || ''
+        });
+        const odds = line.options !== undefined ? JSON.stringify(line.options) : '';
+
+
+
+        await redisClient.hSet(lineKey, {
+            lineId,
+            status,
+            metadata,             
+            odds
+        });
+        console.log(`Line ${line.id} successfully saved in Redis`);
+
+        await redisClient.expire(lineKey, 60 * 60);
+    } catch (error) {
+        console.error('Error saving line to Redis:', error);
+        throw error;
+    }
 };
 
 // check if line is open in redis
