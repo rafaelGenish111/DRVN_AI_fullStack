@@ -13,8 +13,8 @@
                 <li>services</li>
                 <li>contact us</li>
                 <li>map</li>
-                <input type="text" name="" id="userIdInput" placeholder="user ID ...">
-                <input type="text" name="" id="usernameInput" placeholder="username ...">
+                <input type="text" name="" id="userIdInput" placeholder="User ID ...">
+                <input type="text" name="" id="walletIdInput" placeholder="Wallet ID ...">
                 <button onclick="updateIframeUrl()">Sign In</button>
             </ul>
         </nav>
@@ -23,11 +23,11 @@
         <script>
             function updateIframeUrl() {
                 const userIdInput = document.getElementById('userIdInput').value
-                const usernameInput = document.getElementById('usernameInput').value
+                const usernameInput = document.getElementById('walletIdInput').value
                 const iframe = document.getElementById('myIframe')
                 const newUrl = new URL(iframe.src)
                 newUrl.searchParams.set('userid', userIdInput)
-                newUrl.searchParams.set('username', usernameInput)
+                newUrl.searchParams.set('walletId', usernameInput)
                 iframe.src = newUrl.toString()
             }
             

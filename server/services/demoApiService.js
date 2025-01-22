@@ -30,6 +30,10 @@ const placeBet = (username, lineId, amount, option) => {
     return makeRequest(endpoint, data);
 }
 
+// recive bet 
+const reciveBet = (lineId) => {
+    
+}
 // record win 
 const recordWin = (betId) => {
     const endpoint = '/win';

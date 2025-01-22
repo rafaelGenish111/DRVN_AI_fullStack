@@ -1,4 +1,3 @@
-const { error } = require('jquery');
 
 const router = require('express').Router();
 

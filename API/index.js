@@ -13,8 +13,8 @@ const Lines = [
         home_team: 'team 1',
         away_team: 'team 2',
         odds: {
-            home: 1.5,
-            away: 2.2
+            Yes: 1.5,
+            No: 2.2
         }
     },
     {
@@ -27,8 +27,8 @@ const Lines = [
         home_team: 'team 3',
         away_team: 'team 4',
         odds: {
-            home: 0.8,
-            away: 3
+            Yes: 0.8,
+            No: 3
         }
     },
     {
@@ -41,8 +41,8 @@ const Lines = [
         home_team: 'team 11',
         away_team: 'team 7',
         odds: {
-            home: 2.9,
-            away: 1.1
+            Yes: 2.9,
+            No: 1.1
         }
     },
     {
@@ -55,8 +55,8 @@ const Lines = [
         home_team: 'team 78',
         away_team: 'team 21',
         odds: {
-            home: 1.5,
-            away: 2.2
+            Yes: 1.5,
+            No: 2.2
         }
     },
     {
@@ -69,8 +69,8 @@ const Lines = [
         home_team: 'team 10',
         away_team: 'team 32',
         odds: {
-            home: 3.5,
-            away: 0.2
+            Yes: 3.5,
+            No: 0.2
         }
     },
     {
@@ -83,8 +83,8 @@ const Lines = [
         home_team: 'team 1',
         away_team: 'team 2',
         odds: {
-            home: 1.5,
-            away: 2.2
+            Yes: 1.5,
+            No: 2.2
         }
     },
     {
@@ -97,8 +97,8 @@ const Lines = [
         home_team: 'team 3',
         away_team: 'team 4',
         odds: {
-            home: 0.8,
-            away: 3
+            Yes: 0.8,
+            No: 3
         }
     },
     {
@@ -111,8 +111,8 @@ const Lines = [
         home_team: 'team 11',
         away_team: 'team 7',
         odds: {
-            home: 2.9,
-            away: 1.1
+            Yes: 2.9,
+            No: 1.1
         }
     },
     {
@@ -125,8 +125,8 @@ const Lines = [
         home_team: 'team 78',
         away_team: 'team 21',
         odds: {
-            home: 1.5,
-            away: 2.2
+            Yes: 1.5,
+            No: 2.2
         }
     },
     {
@@ -139,8 +139,8 @@ const Lines = [
         home_team: 'team 10',
         away_team: 'team 32',
         odds: {
-            home: 3.5,
-            away: 0.2
+            Yes: 3.5,
+            No: 0.2
         }
     },
 
@@ -308,7 +308,7 @@ app.post('/win', async (req, res) => {
                 return res.status(200).json({ message: 'User lost' });
             case 'PENDING':
                 return res.status(400).json({ message: 'Bet is still pending...' });
-                default:
+            default:
                 return res.status(400).json({ message: `Unknown bet status: ${bet.status}` });
         }
     } catch (error) {

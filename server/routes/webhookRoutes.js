@@ -3,8 +3,6 @@ const drvnService = require('../services/drvnService');
 
 module.exports = ( redisClient,io) => {
     router.post('/lines', async (req, res) => {
-        //     console.log('Headers:', req.headers);
-        // console.log('Body:', req.body);
 
         const lineData = req.body;
         console.log("Received data:", lineData);

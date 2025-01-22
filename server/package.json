@@ -20,6 +20,7 @@
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
     "ioredis": "^5.4.2",
+    "parse": "^3.5.1",
     "redis": "^4.7.0",
     "socket.io": "^4.8.1",
     "uuid": "^11.0.3"

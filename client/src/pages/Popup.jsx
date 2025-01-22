@@ -12,6 +12,7 @@ import {
 
 } from '@mui/material';
 import TimerIcon from '@mui/icons-material/Timer';
+import Alert from '@mui/material/Alert';
 
 
 export default function Popup({ lineData, onClose }) {
@@ -21,6 +22,7 @@ export default function Popup({ lineData, onClose }) {
     const [color, setColor] = useState('green');
     const [selectedAmount, setSelectedAmount] = useState(null);
     const [selectedOption, setSelectedOption] = useState(null);
+    const [alertMessage, setAlertMessage] = useState(null)
 
     const changeColor = (progress) => {
         if (progress < 10) {
@@ -32,6 +34,11 @@ export default function Popup({ lineData, onClose }) {
         }
     };
 
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+    }
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
@@ -70,9 +77,10 @@ export default function Popup({ lineData, onClose }) {
             timestamp: new Date()
         }
         if (!selectedAmount || !selectedOption) {
-            alert('Choose option and amount')
+
+            setAlertMessage('Choose option and amount')
             return console.error('choose option and amount')
-            
+
         }
         socket.emit('player_bet', bet)
         console.log('Bet sended successfully', bet);
@@ -82,7 +90,17 @@ export default function Popup({ lineData, onClose }) {
     const progress = (timeLeft / totalTime) * 100;
 
     return (
-        <Dialog open={true} onClose={onClose} maxWidth='sm' fullWidth>
+        <Dialog
+            open={true}
+            onClose={(event, reson) => {
+                if (reson !== 'backdropClick') {
+                    onClose()
+                }
+            }}
+            maxWidth='sm'
+            fullWidth
+            disableEscapeKeyDown
+        >
             <DialogTitle
                 sx={{
                     backgroundColor: 'green',
@@ -95,6 +113,11 @@ export default function Popup({ lineData, onClose }) {
             <DialogTitle>
                 <DialogActions>
                 </DialogActions>
+                {alertMessage && (
+                    <Alert severity='error' onClose={() => setAlertMessage(null)}>
+                        {alertMessage}
+                    </Alert>
+                )}
                 <Typography variant='subtitle2' color='textSecondary'>
 
                     <Box
@@ -119,7 +142,7 @@ export default function Popup({ lineData, onClose }) {
                             }}
                         >
 
-                            <TimerIcon /> {timeLeft.toFixed(1)}
+                            <TimerIcon /> {formatTime(timeLeft)}
                         </Box>
                     </Box>
                 </Typography>
@@ -135,48 +158,51 @@ export default function Popup({ lineData, onClose }) {
                     <Grid2 container spacing={2}
                         sx={12}
                     >
-                        {lineData.options
-                            .slice()
-                            .sort((a, b) => b - a)
-                            .map((option, index) => (
-                                <Grid2 item xs={12} key={option} sx={{width: '100%'}}>
-                                    <Button
-                                        variant={'contained'}
-                                        color={index === 0 ? 'primary' : 'secondary'}
-                                        onClick={() => setSelectedOption(option)}
-                                        sx={{
-                                            width: '100%',
-                                            color: 'white',
-                                            boxShadow: selectedOption === option ? '0px 0px 10px 2px rgba(0,0,0,0.5)' : 'none', 
-                                            border: selectedOption === option ? '1px solid #45A049' : 'none', 
-                                            transition: 'all 0.3s ease-in-out', 
-                                            '&:hover': {
-                                                backgroundColor: index === 0 ? '#45A049' : '#E64A19', 
-                                            },
-                                        }}
-                                    >
-                                        {option}
-                                    </Button>
-                                </Grid2>
-                            ))}
+                        {lineData.options.map((option, index) => {
+                                const label = index === 0 ? 'Yes' : 'No';
+                                return (
+                                    <Grid2 item xs={12} key={option} sx={{ width: '100%' }}>
+                                        <Button
+                                            variant={'contained'}
+                                            color={index === 0 ? 'primary' : 'secondary'}
+                                            onClick={() => setSelectedOption(option)}
+                                            sx={{
+                                                width: '100%',
+                                                color: 'white',
+                                                boxShadow: selectedOption === option ? '0px 0px 10px 2px rgba(0,0,0,0.5)' : 'none',
+                                                border: selectedOption === option ? '1px solid #45A049' : 'none',
+                                                transition: 'all 0.3s ease-in-out',
+                                                '&:hover': {
+                                                    backgroundColor: index === 0 ? '#45A049' : '#E64A19',
+                                                },
+                                                display: 'flex',
+                                                justifyContent: 'space-between'
+                                            }}
+                                        >
+                                            <span>{label}</span>
+                                            <span>{option}</span>
+                                        </Button>
+                                    </Grid2>
+                                )
+                            })}
                     </Grid2>
                 </Box>
             </DialogContent>
             <DialogContent>
 
                 <Box sx={{ mb: 3 }}>
-                    <Grid2 container spacing={2} sx={{display: 'flex', justifyContent: 'space-between', flexWrap: 'nowrap'}}>
+                    <Grid2 container spacing={2} sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'nowrap' }}>
                         {lineData.amount
                             .map((amount) => (
-                                <Grid2 item key={amount} sx={{flexGrow: 1}}>
+                                <Grid2 item key={amount} sx={{ flexGrow: 1 }}>
                                     <Button
                                         variant={selectedAmount === amount ? 'contained' : 'outlined'}
                                         color='primary'
                                         onClick={() => setSelectedAmount(amount)}
                                         sx={{
                                             width: '100%',
-                                            color: selectedAmount === amount ? 'white' : 'primary.main', 
-                                            borderColor: 'primary.main', 
+                                            color: selectedAmount === amount ? 'white' : 'primary.main',
+                                            borderColor: 'primary.main',
                                             '&:hover': {
                                                 backgroundColor: selectedAmount === amount ? 'primary.main' : 'rgba(0, 0, 255, 0.1)',
                                                 color: 'white',
@@ -191,6 +217,7 @@ export default function Popup({ lineData, onClose }) {
                     </Grid2>
                 </Box>
             </DialogContent>
+
 
             <DialogActions>
                 <Button onClick={handleSubmit}
