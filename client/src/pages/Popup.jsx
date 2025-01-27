@@ -12,10 +12,20 @@ import {
 
 } from '@mui/material';
 import TimerIcon from '@mui/icons-material/Timer';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import TimelapseIcon from '@mui/icons-material/Timelapse';
 import Alert from '@mui/material/Alert';
+import { useDesign } from '../context/DesignContext';
 
+const iconMap = {
+    HourglassEmptyIcon: <HourglassEmptyIcon />,
+    TimelapseIcon: <TimelapseIcon />,
+    TimerIcon: <TimerIcon />,
+};
 
 export default function Popup({ lineData, onClose }) {
+    const { design } = useDesign();
+    const selectedIcon = iconMap[design.icon] || null;
     const totalTime = 60;
     const [timeLeft, setTimeLeft] = useState(totalTime);
     // const [progress, setProgress] = useState(100);
@@ -90,75 +100,77 @@ export default function Popup({ lineData, onClose }) {
     const progress = (timeLeft / totalTime) * 100;
 
     return (
-        <Dialog
-            open={true}
-            onClose={(event, reson) => {
-                if (reson !== 'backdropClick') {
-                    onClose()
-                }
-            }}
-            maxWidth='sm'
-            fullWidth
-            disableEscapeKeyDown
-        >
-            <DialogTitle
-                sx={{
-                    backgroundColor: 'green',
-                    color: 'white',
-                    height: '15%'
-                }}
-            >
-                <Typography variant='h6'>New Bet Available</Typography>
-            </DialogTitle>
-            <DialogTitle>
-                <DialogActions>
-                </DialogActions>
-                {alertMessage && (
-                    <Alert severity='error' onClose={() => setAlertMessage(null)}>
-                        {alertMessage}
-                    </Alert>
-                )}
-                <Typography variant='subtitle2' color='textSecondary'>
+        <div style={{ backgroundColor: design.primaryColor, fontFamily: design.font }}>
 
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: '30px',
-                            backgroundColor: '#e0e0e0',
-                            borderRadius: '5px',
-                            overflow: 'hidden',
-                            marginTop: '10px',
-                        }}
-                    >
+            <Dialog
+                open={true}
+                onClose={(event, reson) => {
+                    if (reson !== 'backdropClick') {
+                        onClose()
+                    }
+                }}
+                maxWidth='sm'
+                fullWidth
+                disableEscapeKeyDown
+            >
+                <DialogTitle
+                    sx={{
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                        height: '15%'
+                    }}
+                >
+                    <Typography variant='h6'>New Bet Available</Typography>
+                </DialogTitle>
+                <DialogTitle>
+                    <DialogActions>
+                    </DialogActions>
+                    {alertMessage && (
+                        <Alert severity='error' onClose={() => setAlertMessage(null)}>
+                            {alertMessage}
+                        </Alert>
+                    )}
+                    <Typography variant='subtitle2' color='textSecondary'>
+
                         <Box
                             sx={{
-                                width: `${progress}%`,
-                                height: '100%',
-                                backgroundColor: color,
-                                transition: 'width 0.1s linear, background-color 0.3s ease-in-out',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center'
+                                width: '100%',
+                                height: '30px',
+                                backgroundColor: '#e0e0e0',
+                                borderRadius: '5px',
+                                overflow: 'hidden',
+                                marginTop: '10px',
                             }}
                         >
+                            <Box
+                                sx={{
+                                    width: `${progress}%`,
+                                    height: '100%',
+                                    backgroundColor: color,
+                                    transition: 'width 0.1s linear, background-color 0.3s ease-in-out',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}
+                            >
 
-                            <TimerIcon /> {formatTime(timeLeft)}
+                                {selectedIcon} {formatTime(timeLeft)}
+                            </Box>
                         </Box>
-                    </Box>
-                </Typography>
-            </DialogTitle>
-            <DialogContent>
-                <Box sx={{ my: 2 }}>
-                    <Typography variant='body1' gutterBottom>
-                        {lineData.line_question} from {lineData.line_type_name}
                     </Typography>
-                </Box>
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{ my: 2 }}>
+                        <Typography variant='body1' gutterBottom>
+                            {lineData.line_question} from {lineData.line_type_name}
+                        </Typography>
+                    </Box>
 
-                <Box sx={{ mb: 2 }}>
-                    <Grid2 container spacing={2}
-                        sx={12}
-                    >
-                        {lineData.options.map((option, index) => {
+                    <Box sx={{ mb: 2 }}>
+                        <Grid2 container spacing={2}
+                            sx={12}
+                        >
+                            {lineData.options.map((option, index) => {
                                 const label = index === 0 ? 'Yes' : 'No';
                                 return (
                                     <Grid2 item xs={12} key={option} sx={{ width: '100%' }}>
@@ -185,54 +197,55 @@ export default function Popup({ lineData, onClose }) {
                                     </Grid2>
                                 )
                             })}
-                    </Grid2>
-                </Box>
-            </DialogContent>
-            <DialogContent>
+                        </Grid2>
+                    </Box>
+                </DialogContent>
+                <DialogContent>
 
-                <Box sx={{ mb: 3 }}>
-                    <Grid2 container spacing={2} sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'nowrap' }}>
-                        {lineData.amount
-                            .map((amount) => (
-                                <Grid2 item key={amount} sx={{ flexGrow: 1 }}>
-                                    <Button
-                                        variant={selectedAmount === amount ? 'contained' : 'outlined'}
-                                        color='primary'
-                                        onClick={() => setSelectedAmount(amount)}
-                                        sx={{
-                                            width: '100%',
-                                            color: selectedAmount === amount ? 'white' : 'primary.main',
-                                            borderColor: 'primary.main',
-                                            '&:hover': {
-                                                backgroundColor: selectedAmount === amount ? 'primary.main' : 'rgba(0, 0, 255, 0.1)',
-                                                color: 'white',
-                                            },
-                                            transition: 'all 0.3s ease-in-out',
-                                        }}
-                                    >
-                                        {amount}$
-                                    </Button>
-                                </Grid2>
-                            ))}
-                    </Grid2>
-                </Box>
-            </DialogContent>
+                    <Box sx={{ mb: 3 }}>
+                        <Grid2 container spacing={2} sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'nowrap' }}>
+                            {lineData.amount
+                                .map((amount) => (
+                                    <Grid2 item key={amount} sx={{ flexGrow: 1 }}>
+                                        <Button
+                                            variant={selectedAmount === amount ? 'contained' : 'outlined'}
+                                            color='primary'
+                                            onClick={() => setSelectedAmount(amount)}
+                                            sx={{
+                                                width: '100%',
+                                                color: selectedAmount === amount ? 'white' : 'primary.main',
+                                                borderColor: 'primary.main',
+                                                '&:hover': {
+                                                    backgroundColor: selectedAmount === amount ? 'primary.main' : 'rgba(0, 0, 255, 0.1)',
+                                                    color: 'white',
+                                                },
+                                                transition: 'all 0.3s ease-in-out',
+                                            }}
+                                        >
+                                            {amount}$
+                                        </Button>
+                                    </Grid2>
+                                ))}
+                        </Grid2>
+                    </Box>
+                </DialogContent>
 
 
-            <DialogActions>
-                <Button onClick={handleSubmit}
-                    color='primary'
-                    variant='contained'
-                    sx={{
-                        backgroundColor: '#77B254',
-                        width: '100%',
-                        justifyContent: 'center',
-                        color: 'white'
-                    }}
-                >
-                    PLACE BET {selectedAmount}$
-                </Button>
-            </DialogActions>
-        </Dialog>
+                <DialogActions>
+                    <Button onClick={handleSubmit}
+                        color='primary'
+                        variant='contained'
+                        sx={{
+                            backgroundColor: '#77B254',
+                            width: '100%',
+                            justifyContent: 'center',
+                            color: 'white'
+                        }}
+                    >
+                        PLACE BET {selectedAmount}$
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
     )
 }

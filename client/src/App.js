@@ -1,20 +1,24 @@
 import './App.css';
-import { ThemeProvider } from '@mui/material/styles';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import theme from './theme/theme';
+import DesignPanel from './pages/DesignPanel';
+import Dashboard from './pages/Dashboard';
+import { DesignProvider } from './context/DesignContext';
 
+const operatorId = '9DvovMak0D'
 
 function App() {
-  return (
-    <ThemeProvider theme={theme}>
 
-    <Router>
-      <Routes>
-        <Route path='/' element={<Home />} />
-      </Routes>
-   </Router>
-    </ThemeProvider>
+  return (
+    <DesignProvider>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Home operatorId={operatorId} />} />
+          <Route path='/design-panel' element={<DesignPanel />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+        </Routes>
+      </Router>
+    </DesignProvider>
   );
 }
 

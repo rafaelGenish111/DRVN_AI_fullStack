@@ -8,6 +8,7 @@ const webhookRoutes = require('./routes/webhookRoutes');
 const userRoutes = require('./routes/userRoutes');
 const configRoutes = require('./routes/configRoutes');
 const socketManager = require('./socketManager');
+const operatorRoutes = require('./routes/operatorRoutes');
 
 const app = express()
 const server = http.createServer(app);
@@ -25,7 +26,8 @@ app.use(cors());
 
 app.use('/webhook', webhookRoutes(redisClient, io));
 app.use('/users', userRoutes(redisClient));
-app.use('/api/config', configRoutes)
+app.use('/api/config', configRoutes);
+app.use('/api/operators', operatorRoutes)
 
 const port = process.env.PORT || 3001;
 
